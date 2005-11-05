@@ -1,5 +1,5 @@
 Changes     for revision history
-Jam.pm      uri-en/decode a data for CGI program
+Uricode.pm  uri-en/decode a data for CGI program
 Makefile.PL write Makefile
 MANIFEST    (this file)
 README      for short descriptions about installation

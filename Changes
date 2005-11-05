@@ -1,6 +1,10 @@
 Revision history for Perl extension CGI::Uricode.
 
-0.03  2005-09-27 12:30:00 JST
+0.04  2005-11-05 15:38:28 JST
+ - the first release which is described below contained another module
+   by mistake. this release collects it.
+
+0.03  2005-11-05 14:26:16 JST
  - first release for the CPAN.
 
 0.01-0.02  1999
