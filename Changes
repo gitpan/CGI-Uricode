@@ -1,5 +1,8 @@
 Revision history for Perl extension CGI::Uricode.
 
+0.05  2005-11-05 18:25:06 JST
+ - modify usage of uri_escape() and uri_unescape().
+
 0.04  2005-11-05 15:38:28 JST
  - the first release which is described below contained another module
    by mistake. this release collects it.

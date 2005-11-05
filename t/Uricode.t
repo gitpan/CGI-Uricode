@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::More tests => 35;
+use Test::More tests => 39;
 
 BEGIN {
     use_ok( 'CGI::Uricode' );
@@ -17,10 +17,12 @@ my @Text = <DATA>;
 # function uri_escape()
 my $text = $Text[0];
 my $expected = $Text[1];
+my $count = $expected =~ tr/%/%/;
 
 my $got = CGI::Uricode::uri_escape($text);
 
-is($got, $expected, 'uri_escape()');
+is($got , $count   , 'uri_escape() returned value');
+is($text, $expected, 'uri_escape() escaped string');
 
 ########################################################################
 # function uri_unescape()
@@ -29,7 +31,8 @@ $expected = $Text[0];
 
 $got = CGI::Uricode::uri_unescape($text);
 
-is($got, $expected, 'uri_unescape()');
+is($got , $count   , 'uri_unescape() returned  value' );
+is($text, $expected, 'uri_unescape() unescaped string');
 
 ########################################################################
 # function uri_encode()
@@ -82,10 +85,12 @@ foreach my $key (keys %param) {
 # function uri_escape() with Kanji
 $text = '畑 正憲';
 $expected = $Text[3];
+$count = $expected =~ tr/%/%/;
 
 $got = CGI::Uricode::uri_escape($text);
 
-is($got, $expected, 'uri_escape() w/ Kanji');
+is($got , $count   , 'uri_escape() returned value w/ Kanji');
+is($text, $expected, 'uri_escape() escaped string w/ Kanji');
 
 ########################################################################
 # function uri_unescape() with Kanji
@@ -94,7 +99,8 @@ $expected = '畑 正憲';
 
 $got = CGI::Uricode::uri_unescape($text);
 
-is($got, $expected, 'uri_unescape() w/ Kanji');
+is($got , $count   , 'uri_unescape() returned  value  w/ Kanji' );
+is($text, $expected, 'uri_unescape() unescaped string w/ Kanji');
 
 ########################################################################
 # function uri_encode() with Kanji

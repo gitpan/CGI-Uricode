@@ -20,7 +20,7 @@ use Carp;
 ########################################################################
 
 #### Constants #########################################################
-our $VERSION = '0.04'; # 2005-11-05 (since 1999)
+our $VERSION = '0.05'; # 2005-11-05 (since 1999)
 ########################################################################
 
 =head1 NAME
@@ -73,8 +73,8 @@ sub uri_encode (@) {
     my @pair;
     for (my $i = 0; $i < $#attr; $i += 2) {
         my($name, $value) = ($attr[$i], $attr[$i + 1]);
-        $name  = uri_escape($name );
-        $value = uri_escape($value);
+        uri_escape($name );
+        uri_escape($value);
         push @pair, "$name=$value";
     }
     
@@ -97,8 +97,8 @@ sub uri_decode ($) {
     foreach my $string (@string) {
         $string =~ tr/+/ /;
         my($name, $value) = split('=', $string);
-        $name  = uri_unescape($name );
-        $value = uri_unescape($value);
+        uri_unescape($name );
+        uri_unescape($value);
         push(@decoded, $name, $value);
     }
     
@@ -107,12 +107,12 @@ sub uri_decode ($) {
 
 =item uri_escape($string)
 
-Exportable function. This function return the uri-escaped string from the given string. The uri-escape is specified in the RFC 2396 L<http://www.ietf.org/rfc/rfc2396.txt> (and it is partially updated by the RFC 2732). The module L<URI::Escape> does the similar function.
+Exportable function. This function escape the given string. The return value of the function is the number of escaped characters. The uri-escape is specified in the RFC 2396 L<http://www.ietf.org/rfc/rfc2396.txt> (and it is partially updated by the RFC 2732). The module L<URI::Escape> does the similar function.
 
 =cut
 
 sub uri_escape ($) {
-    utf8::encode(my $string = shift);
+    utf8::encode($_[0]);
     
     # build conversion map
     my %hexhex;
@@ -120,26 +120,23 @@ sub uri_escape ($) {
         $hexhex{chr($i)} = sprintf('%02X', $i);
     }
     
-    # my $Reserved = ';/?:@&=+$,[]'; # "[" and "]" have been added in the RFC 2732
+    # my $Reserved = ';/?:@&=+$,[]'; # [^$Reserved] != [$Unreserved]
+    # note: "[" and "]" was added in the RFC 2732
     # my $Alphanum = '0-9A-Za-z';
     # my $Mark = q/-_.!~*'()/;
     # my $Unreserved = $Alphanum . $Mark;
     my $Unreserved = q/0-9A-Za-z\-_.!~*'()/;
     
-    $string =~ s/([^$Unreserved])/%$hexhex{$1}/og;
-    
-    return $string;
+    return $_[0] =~ s/([^$Unreserved])/%$hexhex{$1}/og;
 }
 
 =item uri_unescape($string)
 
-Exportable function. This function return the uri-unescaped string from the given uri-escaped string.  The uri-escape is specified in the RFC 2396 L<http://www.ietf.org/rfc/rfc2396.txt> (and it is partially updated by the RFC 2732). The module L<URI::Escape> does the similar function.
+Exportable function. This function unescape the given uri-escaped string. The return value of the function is the number of unescaped characters.
 
 =cut
 
 sub uri_unescape ($) {
-    my $string = shift;
-    
     # build conversion map
     my %unescaped;
     for (my $i = 0; $i <= 255; $i++) {
@@ -147,10 +144,10 @@ sub uri_unescape ($) {
         $unescaped{ sprintf('%02x', $i) } = chr($i); # for %hh
     }
     
-    $string =~ s/%([0-9A-Fa-f]{2})/$unescaped{$1}/g;
+    my $count = $_[0] =~ s/%([0-9A-Fa-f]{2})/$unescaped{$1}/g;
     
-    utf8::decode($string);
-    return $string;
+    utf8::decode($_[0]);
+    return $count;
 }
 
 1;

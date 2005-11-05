@@ -1,4 +1,4 @@
-CGI/Uricode version 0.04
+CGI/Uricode version 0.05
 ========================
 
  This module is used to uri-en/decode a data for CGI program.
