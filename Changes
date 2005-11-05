@@ -1,0 +1,7 @@
+Revision history for Perl extension CGI::Uricode.
+
+0.03  2005-09-27 12:30:00 JST
+ - first release for the CPAN.
+
+0.01-0.02  1999
+ - created as a private library.
