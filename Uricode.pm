@@ -20,7 +20,7 @@ use Carp;
 ########################################################################
 
 #### Constants #########################################################
-our $VERSION = '0.05'; # 2005-11-05 (since 1999)
+our $VERSION = '0.06'; # 2005-11-05 (since 1999)
 ########################################################################
 
 =head1 NAME
@@ -40,7 +40,7 @@ CGI::Uricode - uri-en/decode a data for CGI program.
  print $encoded;
  
  my %output = uri_decode($encoded);
- print 'name: ', $output{'name'};
+ print 'name: ', $output{'name'}; # displays "name: Masanori HATA"
 
 =head1 DESCRIPTION
 
@@ -50,17 +50,23 @@ This module provides a set of functions for the data about C<application/x-www-f
 
 =over
 
-=item uri_encode( $name1 => $value1 [, $name2 => $value2, ...] )
+=item uri_encode(%param)
 
-Exportable function. With the given $name and $value pairs, this function encode, construct and return a string of paired C<$name=$value> strings those which are joined with `&' characters.
+Exportable function. With the given $name and $value pairs, this function encode, construct and return a string of paired C<$name=$value> strings those which are joined with "&" characters.
 
- $encoded = uri_encode(%param);
+Though it is expressed virtually input into a hash (%), it is actually input into an arry (@). The Joined C<$name=$value> strings in the output string will appear in the exact sequence of which they have been given. So you can control the order of the C<$name=$value> strings in the output string. If you just give a real hash (%) to the function, the order of the C<$name=$value> strings those which will appear in the output string will be random.
 
-Though it is expressed virtually input into a hash (%), it is actually input into an arry (@). The Joined C<$name=$value> strings in the output string will appear in the exact order of which they have been given. So you can control the order of the C<$name=$value> strings in the output string.
+ $encoded = uri_encode(
+     name1 => value1,
+     name2 => value2,
+     (...)
+ );
+ 
+ $encoded = "name1=value1&name2=value2&(...)";
 
-The C<application/x-www-form-urlencoded> is specified in the HTML 4.01 L<http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1>.
+The C<application/x-www-form-urlencoded> is specified in the HTML 4 L<http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1>.
 
-With this function, by internally using the C<uri_escape> function, [SPACE] characters will be converted to "%20" strings to escape. This is normal manner in the HTTP "POST" method. To convert [SPACE] characters to "+" characters might occur in HTTP "GET" method to indicate the delimiters of query words, however this fuction won't do.
+With this function, by internally using the C<uri_escape()> function, [SPACE] characters will be converted to "%20" strings to escape. This is normal manner in the HTTP "POST" method. To convert [SPACE] characters to "+" characters might occur in HTTP "GET" method to indicate the delimiters of query words, however this fuction won't do.
 
 =cut
 
@@ -107,7 +113,7 @@ sub uri_decode ($) {
 
 =item uri_escape($string)
 
-Exportable function. This function escape the given string. The return value of the function is the number of escaped characters. The uri-escape is specified in the RFC 2396 L<http://www.ietf.org/rfc/rfc2396.txt> (and it is partially updated by the RFC 2732). The module L<URI::Escape> does the similar function.
+Exportable function. This function escape the given string. The return value of the function is total number of escaped characters. The uri-escape is specified in the RFC 2396 L<http://www.ietf.org/rfc/rfc2396.txt> (and it is partially updated by the RFC 2732). The module L<URI::Escape> do the similar function.
 
 =cut
 
@@ -132,7 +138,7 @@ sub uri_escape ($) {
 
 =item uri_unescape($string)
 
-Exportable function. This function unescape the given uri-escaped string. The return value of the function is the number of unescaped characters.
+Exportable function. This function unescape the given uri-escaped string. The return value of the function is total number of unescaped characters.
 
 =cut
 
@@ -159,7 +165,7 @@ __END__
 
 =over
 
-=item HTML 4.01: L<http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1>
+=item HTML 4: L<http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1>
 
 =item RFC 2396: L<http://www.ietf.org/rfc/rfc2396.txt> (URI)
 
