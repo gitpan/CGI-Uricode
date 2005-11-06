@@ -20,7 +20,7 @@ use Carp;
 ########################################################################
 
 #### Constants #########################################################
-our $VERSION = '0.06'; # 2005-11-05 (since 1999)
+our $VERSION = '0.07'; # 2005-11-06 (since 1999)
 ########################################################################
 
 =head1 NAME
@@ -118,8 +118,6 @@ Exportable function. This function escape the given string. The return value of 
 =cut
 
 sub uri_escape ($) {
-    utf8::encode($_[0]);
-    
     # build conversion map
     my %hexhex;
     for (my $i = 0; $i <= 255; $i++) {
@@ -133,7 +131,11 @@ sub uri_escape ($) {
     # my $Unreserved = $Alphanum . $Mark;
     my $Unreserved = q/0-9A-Za-z\-_.!~*'()/;
     
-    return $_[0] =~ s/([^$Unreserved])/%$hexhex{$1}/og;
+    utf8::encode($_[0]);
+    my $count = $_[0] =~ s/([^$Unreserved])/%$hexhex{$1}/og;
+    utf8::decode($_[0]);
+    
+    return $count
 }
 
 =item uri_unescape($string)
@@ -150,9 +152,10 @@ sub uri_unescape ($) {
         $unescaped{ sprintf('%02x', $i) } = chr($i); # for %hh
     }
     
+    utf8::encode($_[0]);
     my $count = $_[0] =~ s/%([0-9A-Fa-f]{2})/$unescaped{$1}/g;
-    
     utf8::decode($_[0]);
+    
     return $count;
 }
 

@@ -1,5 +1,8 @@
 Revision history for Perl extension CGI::Uricode.
 
+0.07  2005-11-06 16:17:06 JST
+ - modify alogorythm around utf8 flag handling.
+
 0.06  2005-11-06 10:50:34 JST
  - modify pod document.
 
